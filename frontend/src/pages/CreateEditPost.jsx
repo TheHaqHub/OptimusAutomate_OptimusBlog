@@ -13,10 +13,8 @@ export default function CreateEditPost() {
   const isEditMode = !!slug;
 
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
-  const [customSlug, setCustomSlug] = useState("");
 
   const [loading, setLoading] = useState(isEditMode);
   const [submitting, setSubmitting] = useState(false);
@@ -45,10 +43,8 @@ export default function CreateEditPost() {
 
         setPostId(post._id);
         setTitle(post.title);
-        setDescription(post.description || "");
         setContent(post.content);
         setCoverImageUrl(post.coverImageUrl || "");
-        setCustomSlug(post.slug);
       })
       .catch((err) => {
         if (!isMounted) return;
@@ -81,7 +77,6 @@ export default function CreateEditPost() {
     try {
       const postData = {
         title: title.trim(),
-        description: description.trim(),
         content,
         coverImageUrl,
         status: "published",
@@ -98,7 +93,10 @@ export default function CreateEditPost() {
       navigate(`/posts/${savedPost.slug}`);
     } catch (err) {
       console.error("Post submission failed:", err);
-      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      );
       setSubmitting(false);
     }
   };
@@ -151,59 +149,23 @@ export default function CreateEditPost() {
         </div>
 
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-900 mb-2">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-900 mb-2"
+          >
             Title *
           </label>
           <input
             id="title"
             type="text"
             required
-            maxLength={200}
+            maxLength={150}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter post title..."
             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
           />
-          <p className="text-xs text-gray-500 mt-1">{title.length}/200</p>
-        </div>
-
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-900 mb-2">
-            Description (optional)
-          </label>
-          <textarea
-            id="description"
-            maxLength={500}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Brief summary of your post (shown in feeds)..."
-            rows={3}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
-          />
-          <p className="text-xs text-gray-500 mt-1">{description.length}/500</p>
-        </div>
-
-        <div>
-          <label htmlFor="slug" className="block text-sm font-medium text-gray-900 mb-2">
-            URL Slug (optional)
-          </label>
-          <div className="flex items-center">
-            <span className="text-sm text-gray-500 mr-2">/posts/</span>
-            <input
-              id="slug"
-              type="text"
-              maxLength={100}
-              value={customSlug}
-              onChange={(e) =>
-                setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))
-              }
-              placeholder="auto-generated from title"
-              className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
-            />
-          </div>
-          <p className="text-xs text-gray-500 mt-1">
-            Note: currently ignored by the backend — slug is always auto-generated from the title.
-          </p>
+          <p className="text-xs text-gray-500 mt-1">{title.length}/150</p>
         </div>
 
         <div>
@@ -212,7 +174,8 @@ export default function CreateEditPost() {
           </label>
           <RichTextEditor content={content} onChange={setContent} />
           <p className="text-xs text-gray-500 mt-2">
-            Format your post with bold, italic, headings, lists, links, and images.
+            Format your post with bold, italic, headings, lists, links, and
+            images.
           </p>
         </div>
 
@@ -223,8 +186,12 @@ export default function CreateEditPost() {
             className="bg-gray-900 text-white text-sm font-medium rounded-md px-6 py-2.5 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting
-              ? isEditMode ? "Updating..." : "Publishing..."
-              : isEditMode ? "Update Post" : "Publish Post"}
+              ? isEditMode
+                ? "Updating..."
+                : "Publishing..."
+              : isEditMode
+                ? "Update Post"
+                : "Publish Post"}
           </button>
 
           <button

@@ -103,106 +103,112 @@ export default function CreateEditPost() {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        <p className="text-gray-500 text-sm">Loading...</p>
+      <div className="min-h-screen bg-bg">
+        <div className="max-w-3xl mx-auto px-4 py-12">
+          <p className="text-muted text-sm">Loading...</p>
+        </div>
       </div>
     );
   }
 
   if (error && isEditMode) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        <p className="text-red-600 text-sm">{error}</p>
-        <button
-          onClick={() => navigate("/")}
-          className="mt-4 text-sm text-gray-700 hover:underline"
-        >
-          ← Back to Home
-        </button>
+      <div className="min-h-screen bg-bg">
+        <div className="max-w-3xl mx-auto px-4 py-12">
+          <p className="text-red-400 text-sm">{error}</p>
+          <button
+            onClick={() => navigate("/")}
+            className="mt-4 text-sm text-muted hover:text-text transition-colors"
+          >
+            ← Back to Home
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-1">
-        {isEditMode ? "Edit Post" : "Create New Post"}
-      </h1>
-      <p className="text-sm text-gray-500 mb-8">
-        {isEditMode
-          ? "Update your post and publish changes."
-          : "Write something great. Share your thoughts with the world."}
-      </p>
+    <div className="min-h-screen bg-bg">
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        <h1 className="font-heading font-extrabold text-3xl text-text mb-1">
+          {isEditMode ? "Edit Post" : "Create New Post"}
+        </h1>
+        <p className="text-sm text-muted mb-8">
+          {isEditMode
+            ? "Update your post and publish changes."
+            : "Write something great. Share your thoughts with the world."}
+        </p>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-700">{error}</p>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {error && (
+            <div className="p-4 bg-red-950/30 border border-red-900/50 rounded-sm2">
+              <p className="text-sm text-red-400">{error}</p>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-text mb-3">
+              Cover Image (optional)
+            </label>
+            <ImageDropzone value={coverImageUrl} onChange={setCoverImageUrl} />
           </div>
-        )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-3">
-            Cover Image (optional)
-          </label>
-          <ImageDropzone value={coverImageUrl} onChange={setCoverImageUrl} />
-        </div>
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-text mb-2"
+            >
+              Title *
+            </label>
+            <input
+              id="title"
+              type="text"
+              required
+              maxLength={150}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter post title..."
+              className="w-full border border-border rounded-sm2 px-3 py-2 text-sm bg-card text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors"
+            />
+            <p className="text-xs text-muted mt-1">{title.length}/150</p>
+          </div>
 
-        <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-900 mb-2"
-          >
-            Title *
-          </label>
-          <input
-            id="title"
-            type="text"
-            required
-            maxLength={150}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter post title..."
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
-          />
-          <p className="text-xs text-gray-500 mt-1">{title.length}/150</p>
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-text mb-3">
+              Content *
+            </label>
+            <RichTextEditor content={content} onChange={setContent} />
+            <p className="text-xs text-muted mt-2">
+              Format your post with bold, italic, headings, lists, links, and
+              images.
+            </p>
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-3">
-            Content *
-          </label>
-          <RichTextEditor content={content} onChange={setContent} />
-          <p className="text-xs text-gray-500 mt-2">
-            Format your post with bold, italic, headings, lists, links, and
-            images.
-          </p>
-        </div>
+          <div className="flex items-center gap-3 pt-4 border-t border-border">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="bg-primary text-text text-sm font-semibold rounded-sm2 px-6 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {submitting
+                ? isEditMode
+                  ? "Updating..."
+                  : "Publishing..."
+                : isEditMode
+                  ? "Update Post"
+                  : "Publish Post"}
+            </button>
 
-        <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="bg-gray-900 text-white text-sm font-medium rounded-md px-6 py-2.5 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {submitting
-              ? isEditMode
-                ? "Updating..."
-                : "Publishing..."
-              : isEditMode
-                ? "Update Post"
-                : "Publish Post"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate(isEditMode ? `/posts/${slug}` : "/")}
-            className="text-sm font-medium text-gray-700 hover:underline px-4 py-2.5"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+            <button
+              type="button"
+              onClick={() => navigate(isEditMode ? `/posts/${slug}` : "/")}
+              className="text-sm font-medium text-muted hover:text-text transition-colors px-4 py-2.5"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

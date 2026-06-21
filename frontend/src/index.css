@@ -3,19 +3,156 @@
 @tailwind utilities;
 
 body {
-  background-color: #F6F7F5;
-  color: #14171F;
+  background-color: #0B0D12;
+  color: #F8FAFC;
 }
 
+
+/* Global polish */
+
+* {
+  box-sizing: border-box;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* Buttons smoother */
+
+button {
+  transition:
+    transform 0.15s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+button:active {
+  transform: scale(0.97);
+}
+
+
+/* Inputs */
+
+input,
+textarea {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+}
+
+
 /* Signature hover: a highlighter-amber underline that draws itself in,
-   used only on post titles in the feed - evokes marking a line while reading. */
+   used only on post titles in the feed - evokes marking a line while reading.
+   Kept for any page still using the old editorial token system. */
+
 .highlight-on-hover {
-  background-image: linear-gradient(to right, theme('colors.highlighter') 0%, theme('colors.highlighter') 100%);
+  background-image: linear-gradient(
+    to right,
+    theme('colors.highlighter') 0%,
+    theme('colors.highlighter') 100%
+  );
   background-position: 0 100%;
   background-repeat: no-repeat;
   background-size: 0% 2px;
   transition: background-size 0.25s ease;
 }
+
+
 .highlight-on-hover:hover {
   background-size: 100% 2px;
+}
+
+/* Smooth button animation - kept available, not currently referenced
+   since CreateEditPost.jsx now uses explicit Tailwind classes instead. */
+.btn-primary {
+  @apply relative overflow-hidden bg-primary text-text rounded-sm2 px-6 py-2.5 font-medium transition-all duration-300;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.15),
+    transparent
+  );
+  transition: all 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+
+/* Secondary button */
+.btn-secondary {
+  @apply rounded-sm2 px-5 py-2.5 font-medium border border-border transition-all duration-300;
+}
+
+.btn-secondary:hover {
+  @apply bg-card border-primary/50;
+  transform: translateY(-2px);
+}
+
+
+/* Card hover */
+.post-card {
+  @apply bg-card rounded-md2 border border-border transition-all duration-300;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 35px rgba(0,0,0,0.4);
+}
+
+
+/* Input focus */
+.input-style {
+  @apply w-full border border-border rounded-sm2 px-3 py-2 bg-card text-text transition-all duration-300;
+}
+
+.input-style:focus {
+  outline: none;
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 4px rgba(124,58,237,0.18);
+}
+
+
+/* Smooth page elements */
+.fade-in {
+  animation: fadeIn .4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity:0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity:1;
+    transform: translateY(0);
+  }
 }

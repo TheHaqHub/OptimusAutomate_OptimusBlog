@@ -1,84 +1,92 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
+import AuthLayout from "../components/AuthLayout.jsx";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSubmitting(true);
+    setLoading(true);
+
     try {
-      await login({ email, password });
+      await login(form);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-65px)] flex items-center justify-center px-4">
-      <div className="w-full max-w-[400px]">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-1">Log in</h1>
-        <p className="text-sm text-gray-500 mb-6">Welcome back to OptimusBlog.</p>
+    <AuthLayout tagline="Welcome back. Your next post is waiting.">
+      <h1 className="font-heading font-bold text-2xl text-text mb-1">Log in</h1>
+      <p className="text-sm text-muted mb-8">Welcome back to OptimusBlog.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-text mb-1.5">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            required
+            value={form.email}
+            onChange={handleChange}
+            className="w-full border border-border rounded-sm2 px-3 py-2 text-sm bg-card text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors"
+          />
+        </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
-            />
-          </div>
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-text mb-1.5">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            required
+            value={form.password}
+            onChange={handleChange}
+            className="w-full border border-border rounded-sm2 px-3 py-2 text-sm bg-card text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors"
+          />
+        </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <p className="text-sm text-red-400" role="alert">
+            {error}
+          </p>
+        )}
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full bg-gray-900 text-white text-sm font-medium rounded-md py-2 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {submitting ? "Logging in..." : "Log in"}
-          </button>
-        </form>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-primary text-text text-sm font-semibold rounded-sm2 py-2.5 hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? "Logging in..." : "Log in"}
+        </button>
+      </form>
 
-        <p className="text-sm text-gray-500 mt-6 text-center">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-gray-900 font-medium hover:underline">
-            Sign up
-          </Link>
-        </p>
-      </div>
-    </div>
+      <p className="text-sm text-muted mt-6">
+        Don't have an account?{" "}
+        <Link to="/register" className="text-secondary font-medium underline underline-offset-2">
+          Sign up
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }

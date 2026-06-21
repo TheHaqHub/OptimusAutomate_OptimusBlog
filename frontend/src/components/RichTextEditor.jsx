@@ -13,8 +13,8 @@ function ToolbarButton({ onClick, active, children, title }) {
       type="button"
       onClick={onClick}
       title={title}
-      className={`px-2.5 py-1.5 rounded text-sm font-medium ${
-        active ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"
+      className={`px-2.5 py-1.5 rounded text-sm font-medium transition-colors ${
+        active ? "bg-primary text-text" : "text-muted hover:bg-surface2 hover:text-text"
       }`}
     >
       {children}
@@ -35,7 +35,7 @@ export default function RichTextEditor({ content, onChange }) {
     },
     editorProps: {
       attributes: {
-        class: "prose prose-gray max-w-none focus:outline-none min-h-[300px] px-4 py-3",
+        class: "prose prose-invert dark max-w-none focus:outline-none min-h-[300px] px-4 py-3",
       },
     },
   });
@@ -52,7 +52,7 @@ export default function RichTextEditor({ content, onChange }) {
       } catch (err) {
         alert(err.response?.data?.message || "Image upload failed");
       } finally {
-        e.target.value = ""; // reset so the same file can be selected again if needed
+        e.target.value = "";
       }
     },
     [editor]
@@ -69,8 +69,8 @@ export default function RichTextEditor({ content, onChange }) {
   if (!editor) return null;
 
   return (
-    <div className="border border-gray-300 rounded-md overflow-hidden">
-      <div className="flex items-center gap-1 border-b border-gray-200 px-2 py-1.5 bg-gray-50">
+    <div className="border border-border rounded-sm2 overflow-hidden bg-card">
+      <div className="flex items-center gap-1 border-b border-border px-2 py-1.5 bg-surface2">
         <ToolbarButton
           title="Bold"
           active={editor.isActive("bold")}
@@ -103,7 +103,7 @@ export default function RichTextEditor({ content, onChange }) {
           Link
         </ToolbarButton>
 
-        <label className="px-2.5 py-1.5 rounded text-sm font-medium text-gray-600 hover:bg-gray-100 cursor-pointer">
+        <label className="px-2.5 py-1.5 rounded text-sm font-medium text-muted hover:bg-surface2 hover:text-text cursor-pointer transition-colors">
           Image
           <input
             type="file"

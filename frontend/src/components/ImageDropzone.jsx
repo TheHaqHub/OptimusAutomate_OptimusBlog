@@ -29,12 +29,12 @@ export default function ImageDropzone({ value, onChange }) {
 
   if (value) {
     return (
-      <div className="relative rounded-md overflow-hidden border border-gray-300">
+      <div className="relative rounded-sm2 overflow-hidden border border-border">
         <img src={value} alt="Cover preview" className="w-full h-48 object-cover" />
         <button
           type="button"
           onClick={handleRemove}
-          className="absolute top-2 right-2 bg-white/90 text-gray-700 text-xs font-medium px-2.5 py-1 rounded-md hover:bg-white"
+          className="absolute top-2 right-2 bg-bg/90 text-text text-xs font-medium px-2.5 py-1 rounded-sm2 hover:bg-bg transition-colors"
         >
           Remove
         </button>
@@ -48,12 +48,12 @@ export default function ImageDropzone({ value, onChange }) {
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="w-full h-48 border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center text-gray-500 hover:border-gray-400 hover:text-gray-600 disabled:opacity-50"
+        className="w-full h-48 border-2 border-dashed border-border rounded-sm2 flex flex-col items-center justify-center text-muted hover:border-secondary/50 hover:text-text transition-colors disabled:opacity-50"
       >
         <span className="text-sm font-medium">
           {uploading ? "Uploading..." : "Click to add a cover image"}
         </span>
-        <span className="text-xs text-gray-400 mt-1">JPEG, PNG, WEBP, or GIF — max 5MB</span>
+        <span className="text-xs text-muted mt-1">JPEG, PNG, WEBP, or GIF — max 5MB</span>
       </button>
       <input
         ref={inputRef}
@@ -62,7 +62,7 @@ export default function ImageDropzone({ value, onChange }) {
         onChange={handleFileSelect}
         className="hidden"
       />
-      {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+      {error && <p className="text-sm text-red-400 mt-2">{error}</p>}
     </div>
   );
 }
